@@ -82,9 +82,10 @@ namespace RespInfo
                        "递增金额：" + Increase + "\n" +
                        "最高可投：" + Maximum + "\n" +
                        "可用余额：" + Balance + "\n" +
+                       "剩余可投：" + Amount + "\n" +
                        "网页时间：" + Webtime + "\n" +
-                       "系统时间：" + Systime + "\n" +
-                       "剩余可投：" + Amount;
+                       "系统时间：" + Systime;
+                       
 
             return str;
         }
