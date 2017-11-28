@@ -206,9 +206,10 @@ namespace WindowsFormsApp1
             
             CheckForIllegalCrossThreadCalls = false;
             UserLogEvent?.Invoke();
-            TimeSpan ts = pdetailInfo.StartTime - DateTime.Now;
+            //TimeSpan ts = pdetailInfo.StartTime - DateTime.Now;
+            TimeSpan ts = pdetailInfo.StartTime - DateTime.Now-(pdetailInfo.Webtime-pdetailInfo.Systime);
             double seconds = Math.Max(0, Math.Ceiling(ts.TotalSeconds));
-            double s = seconds-2;
+            double s = seconds;
             bool isRelogin = false;
             while(s>0)
             {
@@ -216,7 +217,11 @@ namespace WindowsFormsApp1
                ListViewItem item=pid_listView.FindItemWithText(pdetailInfo.ID);
                 if(item!=null)
                 {
-                   item.SubItems[1].Text = s.ToString();
+                   double H = Math.Floor(s / 3600);
+                   double M = Math.Floor((s-H*3600)/60);
+                   double S = s - M * 60 - H * 3600;
+                    //item.SubItems[1].Text = s.ToString();
+                    item.SubItems[1].Text = H.ToString() + "小时 " + M.ToString() + "分钟 " + S.ToString() + "秒";
                 }
                 if(s<10 && isRelogin==false)
                 {

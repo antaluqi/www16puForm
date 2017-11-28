@@ -174,7 +174,9 @@ namespace Global
                 Thread.Sleep(300);
 
             }
-
+            Thread.Sleep(2000);
+            MemberInfo memberInfo = Obj.Member();
+            Item.SubItems[2].Text = memberInfo.balance.ToString();
 
         }
     }
