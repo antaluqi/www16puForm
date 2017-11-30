@@ -87,18 +87,16 @@ namespace WindowsFormsApp1
 
         private void test_button_Click(object sender, EventArgs e)
         {
-             www16pu a = new www16pu("1234567789", "123456");
-           // List<PdetailInfo> pdetailInfoList = a.Touzi2();
+            www16pu a = new www16pu("1234567789", "123456");
             List<PdetailInfo> pdetailInfoList = a.Touzi();
             if (pdetailInfoList.Count>0)
             {
-                //pdetailInfoList[0].StartTime = DateTime.Now.AddSeconds(10); //测试用
-
                 flashPidList(pdetailInfoList);
                 timeCountThread?.Abort();
                 timeCountThread = new Thread(delegate () { timeCount(pdetailInfoList[0]); });
                 timeCountThread.Start();
             }
+            
 
         }
 
@@ -167,7 +165,7 @@ namespace WindowsFormsApp1
                 {
                     timeCountThread.Abort();
                 }
-                MessageBox.Show(pidList[0].ToString());
+               // MessageBox.Show(pidList[0].ToString());
                 foreach (var pid in pidList)
                 {
                     ListViewItem item = new ListViewItem();
@@ -209,9 +207,9 @@ namespace WindowsFormsApp1
             //TimeSpan ts = pdetailInfo.StartTime - DateTime.Now;
             TimeSpan ts = pdetailInfo.StartTime - DateTime.Now-(pdetailInfo.Webtime-pdetailInfo.Systime);
             double seconds = Math.Max(0, Math.Ceiling(ts.TotalSeconds));
-            double s = seconds;
+            double s = seconds-2;
             bool isRelogin = false;
-            while(s>0)
+            while (s>0)
             {
                 s = s - 1;
                ListViewItem item=pid_listView.FindItemWithText(pdetailInfo.ID);
@@ -223,17 +221,18 @@ namespace WindowsFormsApp1
                     //item.SubItems[1].Text = s.ToString();
                     item.SubItems[1].Text = H.ToString() + "小时 " + M.ToString() + "分钟 " + S.ToString() + "秒";
                 }
-                if(s<10 && isRelogin==false)
+                if(s<60 && isRelogin==false)
                 {
                     UserLogEvent?.Invoke();
                     isRelogin = true;
+                    // test_button.PerformClick();
                 }
-               
-               Thread.Sleep(1000);
-               
+
+                // Thread.Sleep(1000);
+                Thread.CurrentThread.Join(1000);
             }
             TimeUpEvent?.Invoke(pdetailInfo.ID);// 发布信号
-            //CheckForIllegalCrossThreadCalls = true;
+            // CheckForIllegalCrossThreadCalls = true;
         }
 
         protected override void OnClosing(CancelEventArgs e)

@@ -171,10 +171,11 @@ namespace Global
                     break;
                 }
                 reTry = reTry - 1;
-                Thread.Sleep(300);
-
+                //Thread.Sleep(300);
+                Thread.CurrentThread.Join(300);
             }
-            Thread.Sleep(2000);
+            //Thread.Sleep(2000);
+            Thread.CurrentThread.Join(2000);
             MemberInfo memberInfo = Obj.Member();
             Item.SubItems[2].Text = memberInfo.balance.ToString();
 
