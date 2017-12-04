@@ -70,7 +70,7 @@ namespace WindowsFormsApp1
 
 
             pid_listView.Columns["ID"].Width = 50;   // -2:根据标题设置宽度,-1:根据内容设置宽度
-            pid_listView.Columns["TimeDown"].Width = 50;
+            pid_listView.Columns["TimeDown"].Width = 100;
             pid_listView.Columns["Title"].Width = 120;
             pid_listView.Columns["Rate"].Width = 80;
             pid_listView.Columns["Term"].Width = 50;
@@ -204,31 +204,22 @@ namespace WindowsFormsApp1
             
             CheckForIllegalCrossThreadCalls = false;
             UserLogEvent?.Invoke();
-            //TimeSpan ts = pdetailInfo.StartTime - DateTime.Now;
-            TimeSpan ts = pdetailInfo.StartTime - DateTime.Now-(pdetailInfo.Webtime-pdetailInfo.Systime);
-            double seconds = Math.Max(0, Math.Ceiling(ts.TotalSeconds));
-            double s = seconds-2;
+            TimeSpan ds = pdetailInfo.StartTime - DateTime.Now - (pdetailInfo.Webtime - pdetailInfo.Systime);
             bool isRelogin = false;
-            while (s>0)
+            ListViewItem item = pid_listView.FindItemWithText(pdetailInfo.ID);
+            while (ds.TotalSeconds>=0)
             {
-                s = s - 1;
-               ListViewItem item=pid_listView.FindItemWithText(pdetailInfo.ID);
-                if(item!=null)
-                {
-                   double H = Math.Floor(s / 3600);
-                   double M = Math.Floor((s-H*3600)/60);
-                   double S = s - M * 60 - H * 3600;
-                    //item.SubItems[1].Text = s.ToString();
-                    item.SubItems[1].Text = H.ToString() + "小时 " + M.ToString() + "分钟 " + S.ToString() + "秒";
-                }
-                if(s<60 && isRelogin==false)
+                ds = pdetailInfo.StartTime - DateTime.Now - (pdetailInfo.Webtime - pdetailInfo.Systime);
+                double dH= ds.Hours;
+                double dM = ds.Minutes;
+                double dS = ds.Seconds;  
+                item.SubItems[1].Text = dH.ToString() + "时" + dM.ToString() + "分" + dS.ToString() + "秒";
+
+                if (ds.TotalSeconds < 60 && isRelogin==false)
                 {
                     UserLogEvent?.Invoke();
                     isRelogin = true;
-                    // test_button.PerformClick();
                 }
-
-                // Thread.Sleep(1000);
                 Thread.CurrentThread.Join(1000);
             }
             TimeUpEvent?.Invoke(pdetailInfo.ID);// 发布信号
